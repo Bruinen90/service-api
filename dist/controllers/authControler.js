@@ -11,7 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.login = void 0;
 exports.login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('LOGGGING IN');
+    // const { login, password } = req.body;
+    console.log(req);
     res.status(200).json('Logg in success');
 });
 //# sourceMappingURL=authControler.js.map
