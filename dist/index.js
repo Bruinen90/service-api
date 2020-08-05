@@ -15,10 +15,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
 require('dotenv').config();
 const app = express_1.default();
 app.use(body_parser_1.default.json());
-const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', '*');
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+    next();
+});
 app.use('/auth', authRoutes_1.default);
 const spinnUp = () => __awaiter(void 0, void 0, void 0, function* () {
     try {

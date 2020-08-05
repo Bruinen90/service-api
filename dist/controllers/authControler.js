@@ -8,11 +8,53 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = void 0;
+exports.verifyToken = exports.login = void 0;
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+// Models
+const Service_1 = __importDefault(require("../models/Service"));
 exports.login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // const { login, password } = req.body;
-    console.log(req);
-    res.status(200).json('Logg in success');
+    console.log(req.body);
+    const { login, password } = req.body;
+    try {
+        const reqService = yield Service_1.default.findOne({ login: login });
+        console.log(reqService);
+        if (!reqService) {
+            console.log('no service found');
+            return res.status(401).json('Not authenticated');
+        }
+        console.log(password, reqService.password);
+        const passwordCorrect = yield bcrypt_1.default.compareSync(password, reqService.password);
+        console.log('PASSWORD CORRECT:', passwordCorrect);
+        if (!passwordCorrect) {
+            console.log('wrong password');
+            return res.status(401).json('Not authenticated');
+        }
+        const token = jsonwebtoken_1.default.sign({ serviceId: reqService._id.toString() }, process.env.JWT_SECRET);
+        return res.status(200).json({ token: token });
+    }
+    catch (err) {
+        console.log(err);
+    }
+});
+exports.verifyToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { isAuth, serviceId } = req;
+    if (!isAuth) {
+        res.status(401).json('Not authenticated');
+    }
+    try {
+        const service = yield Service_1.default.findById(serviceId);
+        if (!service) {
+            res.status(401).json('Not authenticated');
+        }
+        return { serviceId: serviceId };
+    }
+    catch (err) {
+        console.log(err);
+    }
 });
 //# sourceMappingURL=authControler.js.map
