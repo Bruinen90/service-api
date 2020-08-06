@@ -1,32 +1,34 @@
 import { Request, Response, NextFunction } from 'express';
 
-const jws = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 interface IIsAuth extends Request {
 	isAuth: boolean;
 	serviceId: string;
 }
 
-module.exports = (req: IIsAuth, res: Response, next: NextFunction) => {
+const isAuth = (req: IIsAuth, res: Response, next: NextFunction) => {
 	const breakMiddleware = () => {
 		req.isAuth = false;
 		return next();
 	};
-	const authHeader = req.get('Authorization');
+	const authHeader = req.get('authorization');
 	if (!authHeader) {
 		return breakMiddleware();
 	}
 	const token = authHeader;
 	let decodedToken;
 	try {
-		decodedToken = jws.verify(token, process.env.JWT_SECRET);
+		decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 	} catch (error) {
 		return breakMiddleware();
 	}
 	if (!decodedToken) {
 		return breakMiddleware();
 	}
-	req.serviceId = decodedToken.userId;
+	req.serviceId = decodedToken.serviceId;
 	req.isAuth = true;
 	return next();
 };
+
+export default isAuth;

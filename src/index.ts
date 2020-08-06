@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import authRoutes from './routes/authRoutes';
+import isAuth from './middleware/isAuth';
 require('dotenv').config();
 
 const app = express();
@@ -20,6 +21,8 @@ app.use((req, res, next) => {
 	}
 	next();
 });
+
+app.use(isAuth);
 
 app.use('/auth', authRoutes);
 

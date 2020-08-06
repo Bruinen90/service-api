@@ -26,5 +26,6 @@ const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const authControler = __importStar(require("../controllers/authControler"));
 router.post('/login', authControler.login);
+router.post('/verifyToken', authControler.verifyToken);
 exports.default = router;
 //# sourceMappingURL=authRoutes.js.map

@@ -57,7 +57,7 @@ export const verifyToken = async (req: VerifyTokenRequest, res: Response) => {
 		if (!service) {
 			return res.status(401).json('Not authenticated');
 		}
-		return { serviceId: serviceId };
+		return res.status(200).json({ _id: serviceId, name: service.login });
 	} catch (err) {
 		console.log(err);
 	}

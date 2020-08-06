@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const jws = require('jsonwebtoken');
 module.exports = (req, res, next) => {
+    console.log('HEADERS', req.headers);
     const breakMiddleware = () => {
         req.isAuth = false;
         return next();
