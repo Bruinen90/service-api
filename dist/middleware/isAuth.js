@@ -1,20 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const jws = require('jsonwebtoken');
-module.exports = (req, res, next) => {
-    console.log('HEADERS', req.headers);
+const jwt = require('jsonwebtoken');
+const isAuth = (req, res, next) => {
     const breakMiddleware = () => {
         req.isAuth = false;
         return next();
     };
-    const authHeader = req.get('Authorization');
+    const authHeader = req.get('authorization');
     if (!authHeader) {
         return breakMiddleware();
     }
     const token = authHeader;
     let decodedToken;
     try {
-        decodedToken = jws.verify(token, process.env.JWT_SECRET);
+        decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     }
     catch (error) {
         return breakMiddleware();
@@ -22,8 +21,9 @@ module.exports = (req, res, next) => {
     if (!decodedToken) {
         return breakMiddleware();
     }
-    req.serviceId = decodedToken.userId;
+    req.serviceId = decodedToken.serviceId;
     req.isAuth = true;
     return next();
 };
+exports.default = isAuth;
 //# sourceMappingURL=isAuth.js.map
