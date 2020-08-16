@@ -12,13 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newSettingsField = void 0;
+exports.getSettingsFields = exports.newSettingsField = void 0;
 const SettingsField_1 = __importDefault(require("../models/SettingsField"));
 exports.newSettingsField = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.body);
+    const { serviceId } = req;
     const { name, type, category, radios } = req.body;
     const alreadyExist = yield SettingsField_1.default.findOne({
-        name: name,
-        category: category,
+        name,
+        category,
+        serviceId,
     });
     if (name &&
         type &&
@@ -29,7 +32,13 @@ exports.newSettingsField = (req, res) => __awaiter(void 0, void 0, void 0, funct
                 message: `Settings field with name "${name}" already exist in category "${category}"`,
             });
         }
-        const newField = new SettingsField_1.default(req.body);
+        const newField = new SettingsField_1.default({
+            name,
+            category,
+            type,
+            serviceId,
+            radios: radios,
+        });
         const savedField = yield newField.save();
         if (!savedField._id) {
             return res.status(500).json({ message: 'Internal server error' });
@@ -39,5 +48,8 @@ exports.newSettingsField = (req, res) => __awaiter(void 0, void 0, void 0, funct
     else {
         return res.status(400).json({ message: 'Insunfficient data provided' });
     }
+});
+exports.getSettingsFields = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { serviceId } = req;
 });
 //# sourceMappingURL=settingsControler.js.map
