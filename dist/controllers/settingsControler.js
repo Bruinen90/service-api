@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getSettingsFields = exports.newSettingsField = void 0;
 const SettingsField_1 = __importDefault(require("../models/SettingsField"));
 exports.newSettingsField = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.body);
     const { serviceId } = req;
     const { name, type, category, radios } = req.body;
     const alreadyExist = yield SettingsField_1.default.findOne({
@@ -51,5 +50,9 @@ exports.newSettingsField = (req, res) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.getSettingsFields = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { serviceId } = req;
+    const allSettingsFields = yield SettingsField_1.default.find({
+        serviceId: serviceId,
+    });
+    return res.status(200).json({ allSettingsFields });
 });
 //# sourceMappingURL=settingsControler.js.map

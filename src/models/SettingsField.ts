@@ -1,4 +1,15 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
+
+export type FieldCategory = 'customers' | 'repairs' | 'devices';
+
+interface SettingsField extends Document {
+	_id: string;
+	name: string;
+	type: string;
+	category: FieldCategory;
+	serviceId: string;
+	radios: string[];
+}
 
 const SettingsFieldSchema = new Schema({
 	name: { type: String, required: true },
@@ -8,4 +19,7 @@ const SettingsFieldSchema = new Schema({
 	radios: [String],
 });
 
-export default mongoose.model('SettingsField', SettingsFieldSchema);
+export default mongoose.model<SettingsField>(
+	'SettingsField',
+	SettingsFieldSchema
+);

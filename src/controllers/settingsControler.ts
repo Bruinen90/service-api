@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import SettingsField from '../models/SettingsField';
+import SettingsField, { FieldCategory } from '../models/SettingsField';
 
 interface StandardRequest extends Request {
 	serviceId: string;
@@ -18,12 +18,11 @@ export const newSettingsField = async (
 	req: NewSettingsFieldReq,
 	res: Response
 ) => {
-	console.log(req.body);
 	const { serviceId } = req;
 	const { name, type, category, radios } = req.body;
 	const alreadyExist = await SettingsField.findOne({
 		name,
-		category,
+		category: category as FieldCategory,
 		serviceId,
 	});
 	if (
@@ -52,6 +51,20 @@ export const newSettingsField = async (
 	} else {
 		return res.status(400).json({ message: 'Insunfficient data provided' });
 	}
+};
+
+export const deleteSettingsField = async (
+	req: StandardRequest,
+	res: Response
+) => {
+	const { serviceId } = req;
+	const {fieldId} = req.params;
+	const deletedField = await SettingsField.findById(fieldId);
+	if (!serviceId || !deletedField || deletedField.serviceId !== serviceId) {
+		return res.status(401).json({ message: 'Not authorized' });
+	}
+	await SettingsField.deleteOne({ _id: fieldId });
+	res.status(200).json({ message: `Record ${fieldId} successfully deleted` });
 };
 
 export const getSettingsFields = async (
