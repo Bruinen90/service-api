@@ -8,5 +8,6 @@ const router = express_1.default.Router();
 const settingsControler_1 = require("../controllers/settingsControler");
 router.post('/new-field', settingsControler_1.newSettingsField);
 router.get('/all-fields', settingsControler_1.getSettingsFields);
+router.delete('/delete-field/:fieldId', settingsControler_1.deleteSettingsField);
 exports.default = router;
 //# sourceMappingURL=settingsRoutes.js.map

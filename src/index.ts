@@ -1,8 +1,13 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
+
+// Routes
 import authRoutes from './routes/authRoutes';
 import settingsRoutes from './routes/settingsRoutes';
+import customersRoutes from './routes/customersRoutes';
+
+// Middleware
 import isAuth from './middleware/isAuth';
 require('dotenv').config();
 
@@ -27,6 +32,7 @@ app.use(isAuth);
 
 app.use('/auth', authRoutes);
 app.use('/settings', settingsRoutes);
+app.use('/customers', customersRoutes);
 
 const spinnUp = async () => {
 	try {

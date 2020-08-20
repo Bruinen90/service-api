@@ -15,8 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const body_parser_1 = __importDefault(require("body-parser"));
+// Routes
 const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
 const settingsRoutes_1 = __importDefault(require("./routes/settingsRoutes"));
+const customersRoutes_1 = __importDefault(require("./routes/customersRoutes"));
+// Middleware
 const isAuth_1 = __importDefault(require("./middleware/isAuth"));
 require('dotenv').config();
 const app = express_1.default();
@@ -33,6 +36,7 @@ app.use((req, res, next) => {
 app.use(isAuth_1.default);
 app.use('/auth', authRoutes_1.default);
 app.use('/settings', settingsRoutes_1.default);
+app.use('/customers', customersRoutes_1.default);
 const spinnUp = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield mongoose_1.default.connect(`mongodb+srv://bruinen:${process.env.MONGO_PASSWORD}@nodecourse-wx0jk.gcp.mongodb.net/service`, {

@@ -12,14 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSettingsFields = exports.newSettingsField = void 0;
+exports.getSettingsFields = exports.deleteSettingsField = exports.newSettingsField = void 0;
 const SettingsField_1 = __importDefault(require("../models/SettingsField"));
 exports.newSettingsField = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { serviceId } = req;
     const { name, type, category, radios } = req.body;
     const alreadyExist = yield SettingsField_1.default.findOne({
         name,
-        category,
+        category: category,
         serviceId,
     });
     if (name &&
@@ -47,6 +47,16 @@ exports.newSettingsField = (req, res) => __awaiter(void 0, void 0, void 0, funct
     else {
         return res.status(400).json({ message: 'Insunfficient data provided' });
     }
+});
+exports.deleteSettingsField = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { serviceId } = req;
+    const { fieldId } = req.params;
+    const deletedField = yield SettingsField_1.default.findById(fieldId);
+    if (!serviceId || !deletedField || deletedField.serviceId !== serviceId) {
+        return res.status(401).json({ message: 'Not authorized' });
+    }
+    yield SettingsField_1.default.deleteOne({ _id: fieldId });
+    res.status(200).json({ message: `Record ${fieldId} successfully deleted` });
 });
 exports.getSettingsFields = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { serviceId } = req;
