@@ -12,26 +12,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newCustomer = void 0;
-const Customer_1 = __importDefault(require("../models/Customer"));
-exports.newCustomer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.serviceId) {
-        return res.status(401);
-    }
+exports.findDevice = exports.newDevice = void 0;
+const Device_1 = __importDefault(require("../models/Device"));
+exports.newDevice = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // ADD GUARD!!!
     try {
-        const { phone } = req.body;
-        const duplicate = yield Customer_1.default.findOne({ phone: phone });
-        if (duplicate) {
-            return res.status(409).json({
-                message: 'Customer with provided phone number already exists',
-            });
-        }
-        const customer = new Customer_1.default(Object.assign(Object.assign({}, req.body), { serviceId: req.serviceId }));
-        yield customer.save();
-        res.status(200).json({ _id: customer._id });
+        const deviceToSave = new Device_1.default(req.body);
+        const savedDevice = yield deviceToSave.save();
+        res.status(200).json({ _id: savedDevice._id });
     }
     catch (err) {
         console.log(err);
     }
 });
-//# sourceMappingURL=customersControler.js.map
+exports.findDevice = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // ADD GUARD!!!
+    try {
+        const { paramName, value } = req.params;
+        const foundDevices = yield Device_1.default.find({ [paramName]: value });
+        if (!foundDevices || foundDevices.length === 0) {
+            return res.status(404).json({ message: 'No devices found' });
+        }
+        return res.status(200).json({ foundDevices });
+    }
+    catch (err) {
+        console.log(err);
+    }
+});
+//# sourceMappingURL=devicesControler.js.map

@@ -1,10 +1,11 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { StandardRequest } from '../types/common';
 
 import Customer from '../models/Customer';
 
 interface INewCustomerReq extends StandardRequest {
 	body: {
+		phone: string;
 		[custmerField: string]: string | boolean | number;
 	};
 }

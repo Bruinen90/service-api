@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import authRoutes from './routes/authRoutes';
 import settingsRoutes from './routes/settingsRoutes';
 import customersRoutes from './routes/customersRoutes';
+import devicesRoutes from './routes/devicesRoutes';
 
 // Middleware
 import isAuth from './middleware/isAuth';
@@ -33,6 +34,7 @@ app.use(isAuth);
 app.use('/auth', authRoutes);
 app.use('/settings', settingsRoutes);
 app.use('/customers', customersRoutes);
+app.use('/devices', devicesRoutes);
 
 const spinnUp = async () => {
 	try {
