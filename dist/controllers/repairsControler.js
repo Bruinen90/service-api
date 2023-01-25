@@ -12,26 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newCustomer = void 0;
-const Customer_1 = __importDefault(require("../models/Customer"));
-exports.newCustomer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.serviceId) {
-        return res.status(401);
-    }
+exports.getRepair = exports.newRepair = void 0;
+// Models
+const Repair_1 = __importDefault(require("../models/Repair"));
+exports.newRepair = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { phoneNumber } = req.body;
-        const duplicate = yield Customer_1.default.findOne({ phoneNumber: phoneNumber });
-        if (duplicate) {
-            return res.status(409).json({
-                message: 'Customer with provided phone number already exists',
-            });
-        }
-        const customer = new Customer_1.default(Object.assign(Object.assign({}, req.body), { serviceId: req.serviceId }));
-        yield customer.save();
-        res.status(200).json({ _id: customer._id });
+        const repairToSave = new Repair_1.default(req.body);
+        const savedRepair = yield repairToSave.save();
+        res.status(200).json(savedRepair._id);
     }
     catch (err) {
         console.log(err);
     }
 });
-//# sourceMappingURL=customersControler.js.map
+exports.getRepair = (req, res) => __awaiter(void 0, void 0, void 0, function* () { });
+//# sourceMappingURL=repairsControler.js.map

@@ -7,6 +7,7 @@ import authRoutes from './routes/authRoutes';
 import settingsRoutes from './routes/settingsRoutes';
 import customersRoutes from './routes/customersRoutes';
 import devicesRoutes from './routes/devicesRoutes';
+import repairsRoutes from './routes/repairRoutes';
 
 // Middleware
 import isAuth from './middleware/isAuth';
@@ -35,6 +36,7 @@ app.use('/auth', authRoutes);
 app.use('/settings', settingsRoutes);
 app.use('/customers', customersRoutes);
 app.use('/devices', devicesRoutes);
+app.use('/repairs', repairsRoutes);
 
 const spinnUp = async () => {
 	try {

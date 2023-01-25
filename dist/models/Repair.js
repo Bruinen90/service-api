@@ -20,8 +20,21 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-const CustomerSchema = new mongoose_1.Schema({
-    phoneNumber: { type: String, required: true },
+const RepairSchema = new mongoose_1.Schema({
+    customerId: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Customer',
+    },
+    deviceId: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Device',
+    },
+    repairData: {
+        addedDate: { type: Date, required: true },
+        completionDate: { type: Date, required: true },
+    },
 }, { strict: false });
-exports.default = mongoose_1.default.model('Customer', CustomerSchema);
-//# sourceMappingURL=Customer.js.map
+exports.default = mongoose_1.default.model('Repair', RepairSchema);
+//# sourceMappingURL=Repair.js.map

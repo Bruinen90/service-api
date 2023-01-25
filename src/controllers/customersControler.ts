@@ -5,7 +5,7 @@ import Customer from '../models/Customer';
 
 interface INewCustomerReq extends StandardRequest {
 	body: {
-		phone: string;
+		phoneNumber: string;
 		[custmerField: string]: string | boolean | number;
 	};
 }
@@ -15,8 +15,8 @@ export const newCustomer = async (req: INewCustomerReq, res: Response) => {
 		return res.status(401);
 	}
 	try {
-		const { phone } = req.body;
-		const duplicate = await Customer.findOne({ phone: phone });
+		const { phoneNumber } = req.body;
+		const duplicate = await Customer.findOne({ phoneNumber: phoneNumber });
 		if (duplicate) {
 			return res.status(409).json({
 				message: 'Customer with provided phone number already exists',
