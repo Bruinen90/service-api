@@ -11,6 +11,7 @@ interface NewSettingsFieldReq extends StandardRequest {
 		type: string;
 		category: string;
 		radios?: string[];
+		required?: boolean;
 	};
 }
 
@@ -19,7 +20,7 @@ export const newSettingsField = async (
 	res: Response
 ) => {
 	const { serviceId } = req;
-	const { name, type, category, radios } = req.body;
+	const { name, type, category, radios, required } = req.body;
 	const alreadyExist = await SettingsField.findOne({
 		name,
 		category: category as FieldCategory,
@@ -41,6 +42,7 @@ export const newSettingsField = async (
 			category,
 			type,
 			serviceId,
+			required,
 			radios: radios,
 		});
 		const savedField = await newField.save();
@@ -58,7 +60,7 @@ export const deleteSettingsField = async (
 	res: Response
 ) => {
 	const { serviceId } = req;
-	const {fieldId} = req.params;
+	const { fieldId } = req.params;
 	const deletedField = await SettingsField.findById(fieldId);
 	if (!serviceId || !deletedField || deletedField.serviceId !== serviceId) {
 		return res.status(401).json({ message: 'Not authorized' });

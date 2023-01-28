@@ -21,19 +21,18 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const RepairSchema = new mongoose_1.Schema({
-    customerId: {
+    customer: {
         type: mongoose_1.Schema.Types.ObjectId,
         required: true,
         ref: 'Customer',
     },
-    deviceId: {
+    device: {
         type: mongoose_1.Schema.Types.ObjectId,
         required: true,
         ref: 'Device',
     },
     repairData: {
         addedDate: { type: Date, required: true },
-        completionDate: { type: Date, required: true },
     },
 }, { strict: false });
 exports.default = mongoose_1.default.model('Repair', RepairSchema);

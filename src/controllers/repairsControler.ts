@@ -1,17 +1,18 @@
 // Types
 import { StandardRequest } from './../types/common';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
 // Models
 import Repair from '../models/Repair';
+import Customer from '../models/Customer';
+import Device from '../models/Device';
 
 interface INewRepairRequest extends StandardRequest {
 	body: {
-		customerId: string;
-		deviceId: string;
-		repairData: {
+		customer: any;
+		device: any;
+		problem: {
 			addedDate: Date;
-			completionDate: Date;
 			[paramName: string]: string | number | boolean | Date;
 		};
 	};
@@ -19,9 +20,25 @@ interface INewRepairRequest extends StandardRequest {
 
 export const newRepair = async (req: INewRepairRequest, res: Response) => {
 	try {
-		const repairToSave = new Repair(req.body);
-		const savedRepair = await repairToSave.save();
-		res.status(200).json(savedRepair._id);
+		console.log(req.body);
+		const customerToSave = await new Customer(req.body.customer);
+		await customerToSave.save();
+		const deviceToSave = await new Device(req.body.device);
+		await deviceToSave.save();
+		const repairToSave = await new Repair({
+			customer: customerToSave._id,
+			device: deviceToSave._id,
+			repairData: {
+				...req.body.problem,
+				addedDate: new Date(),
+			},
+		});
+		await repairToSave.save();
+		console.log(repairToSave);
+		// const repairToSave = new Repair(req.body);
+		// const savedRepair = await repairToSave.save();
+		// res.status(200).json(savedRepair._id);
+		res.status(200);
 	} catch (err) {
 		console.log(err);
 	}

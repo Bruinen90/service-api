@@ -2,19 +2,18 @@ import mongoose, { Schema } from 'mongoose';
 
 const RepairSchema = new Schema(
 	{
-		customerId: {
+		customer: {
 			type: Schema.Types.ObjectId,
 			required: true,
 			ref: 'Customer',
 		},
-		deviceId: {
+		device: {
 			type: Schema.Types.ObjectId,
 			required: true,
 			ref: 'Device',
 		},
 		repairData: {
 			addedDate: { type: Date, required: true },
-			completionDate: { type: Date, required: true },
 		},
 	},
 	{ strict: false }

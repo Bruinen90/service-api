@@ -8,7 +8,8 @@ interface SettingsField extends Document {
 	type: string;
 	category: FieldCategory;
 	serviceId: string;
-	radios: string[];
+	radios?: string[];
+	required: Boolean;
 }
 
 const SettingsFieldSchema = new Schema({
@@ -16,6 +17,7 @@ const SettingsFieldSchema = new Schema({
 	type: { type: String, required: true },
 	category: { type: String, required: true },
 	serviceId: { type: String, required: true },
+	required: Boolean,
 	radios: [String],
 });
 
