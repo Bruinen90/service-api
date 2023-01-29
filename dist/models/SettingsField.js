@@ -25,6 +25,7 @@ const SettingsFieldSchema = new mongoose_1.Schema({
     type: { type: String, required: true },
     category: { type: String, required: true },
     serviceId: { type: String, required: true },
+    required: Boolean,
     radios: [String],
 });
 exports.default = mongoose_1.default.model('SettingsField', SettingsFieldSchema);

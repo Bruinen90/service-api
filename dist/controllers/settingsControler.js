@@ -16,7 +16,7 @@ exports.getSettingsFields = exports.deleteSettingsField = exports.newSettingsFie
 const SettingsField_1 = __importDefault(require("../models/SettingsField"));
 exports.newSettingsField = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { serviceId } = req;
-    const { name, type, category, radios } = req.body;
+    const { name, type, category, radios, required } = req.body;
     const alreadyExist = yield SettingsField_1.default.findOne({
         name,
         category: category,
@@ -36,6 +36,7 @@ exports.newSettingsField = (req, res) => __awaiter(void 0, void 0, void 0, funct
             category,
             type,
             serviceId,
+            required,
             radios: radios,
         });
         const savedField = yield newField.save();

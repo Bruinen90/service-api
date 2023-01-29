@@ -7,6 +7,7 @@ interface StandardRequest extends Request {
 
 interface NewSettingsFieldReq extends StandardRequest {
 	body: {
+		_id?: string;
 		name: string;
 		type: string;
 		category: string;
@@ -20,7 +21,20 @@ export const newSettingsField = async (
 	res: Response
 ) => {
 	const { serviceId } = req;
-	const { name, type, category, radios, required } = req.body;
+	const { _id, name, type, category, radios, required } = req.body;
+	if (_id) {
+		const foundField = await SettingsField.findById(_id);
+		if (!foundField) {
+			return res
+				.status(404)
+				.json({ message: 'Field ID provided but not found id DB' });
+		}
+		await foundField.update({ name, type, radios, required });
+		await foundField.save();
+		return res
+			.status(204)
+			.json({ message: 'Field successfully updated', _id });
+	}
 	const alreadyExist = await SettingsField.findOne({
 		name,
 		category: category as FieldCategory,
