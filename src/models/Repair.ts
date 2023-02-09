@@ -15,6 +15,11 @@ const RepairSchema = new Schema(
 		repairData: {
 			addedDate: { type: Date, required: true },
 		},
+		serviceId: {
+			type: Schema.Types.ObjectId,
+			required: true,
+			req: 'Service',
+		},
 	},
 	{ strict: false }
 );

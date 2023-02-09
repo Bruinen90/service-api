@@ -16,7 +16,20 @@ exports.getSettingsFields = exports.deleteSettingsField = exports.newSettingsFie
 const SettingsField_1 = __importDefault(require("../models/SettingsField"));
 exports.newSettingsField = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { serviceId } = req;
-    const { name, type, category, radios, required } = req.body;
+    const { _id, name, type, category, radios, required } = req.body;
+    if (_id) {
+        const foundField = yield SettingsField_1.default.findById(_id);
+        if (!foundField) {
+            return res
+                .status(404)
+                .json({ message: 'Field ID provided but not found id DB' });
+        }
+        yield foundField.update({ name, type, radios, required });
+        yield foundField.save();
+        return res
+            .status(204)
+            .json({ message: 'Field successfully updated', _id });
+    }
     const alreadyExist = yield SettingsField_1.default.findOne({
         name,
         category: category,

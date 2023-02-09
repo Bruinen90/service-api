@@ -6,6 +6,7 @@ import { Response } from 'express';
 import Repair from '../models/Repair';
 import Customer from '../models/Customer';
 import Device from '../models/Device';
+import { json } from 'body-parser';
 
 interface INewRepairRequest extends StandardRequest {
 	body: {
@@ -19,8 +20,8 @@ interface INewRepairRequest extends StandardRequest {
 }
 
 export const newRepair = async (req: INewRepairRequest, res: Response) => {
+	const { serviceId } = req;
 	try {
-		console.log(req.body);
 		const customerToSave = await new Customer(req.body.customer);
 		await customerToSave.save();
 		const deviceToSave = await new Device(req.body.device);
@@ -32,6 +33,7 @@ export const newRepair = async (req: INewRepairRequest, res: Response) => {
 				...req.body.problem,
 				addedDate: new Date(),
 			},
+			serviceId: serviceId,
 		});
 		await repairToSave.save();
 		console.log(repairToSave);
@@ -53,3 +55,13 @@ interface IGetRepairRequest extends StandardRequest {
 }
 
 export const getRepair = async (req: IGetRepairRequest, res: Response) => {};
+
+export const getAllRepairs = async (req: any, res: Response) => {
+	try {
+		const { serviceId } = req;
+		const allRepairs = await Repair.find({ serviceId: serviceId });
+		res.status(200).json(allRepairs);
+	} catch (err) {
+		console.log(err);
+	}
+};
