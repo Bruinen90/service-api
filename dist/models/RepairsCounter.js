@@ -18,14 +18,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const router = express_1.default.Router();
-const repairsController = __importStar(require("../controllers/repairsControler"));
-router.get('/get-all', repairsController.getAllRepairs);
-router.post('/new-repair', repairsController.newRepair);
-exports.default = router;
-//# sourceMappingURL=repairRoutes.js.map
+const mongoose_1 = __importStar(require("mongoose"));
+const RepairsCounter = new mongoose_1.Schema({
+    counter: { type: Number, default: 1 },
+});
+exports.default = mongoose_1.default.model('RepairsCounter', RepairsCounter);
+//# sourceMappingURL=RepairsCounter.js.map

@@ -1,5 +1,12 @@
 import mongoose, { Schema } from 'mongoose';
 
+interface IRepair extends mongoose.Document {
+	customer: string;
+	device: string;
+	repairData: Date;
+	serviceId: string;
+}
+
 const RepairSchema = new Schema(
 	{
 		customer: {
@@ -18,10 +25,10 @@ const RepairSchema = new Schema(
 		serviceId: {
 			type: Schema.Types.ObjectId,
 			required: true,
-			req: 'Service',
+			ref: 'Service',
 		},
 	},
 	{ strict: false }
 );
 
-export default mongoose.model('Repair', RepairSchema);
+export default mongoose.model<IRepair>('Repair', RepairSchema);

@@ -34,6 +34,11 @@ const RepairSchema = new mongoose_1.Schema({
     repairData: {
         addedDate: { type: Date, required: true },
     },
+    serviceId: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Service',
+    },
 }, { strict: false });
 exports.default = mongoose_1.default.model('Repair', RepairSchema);
 //# sourceMappingURL=Repair.js.map
