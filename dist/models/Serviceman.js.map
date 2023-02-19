@@ -1,0 +1,1 @@
+{"version":3,"file":"Serviceman.js","sourceRoot":"","sources":["../../src/models/Serviceman.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;AAAA,qDAAsD;AAQtD,MAAM,gBAAgB,GAAG,IAAI,iBAAM,CAAC;IACnC,IAAI,EAAE,EAAE,IAAI,EAAE,MAAM,EAAE,QAAQ,EAAE,IAAI,EAAE;IACtC,WAAW,EAAE,MAAM;IACnB,KAAK,EAAE,MAAM;CACb,CAAC,CAAC;AAEH,kBAAe,kBAAQ,CAAC,KAAK,CAAc,YAAY,EAAE,gBAAgB,CAAC,CAAC"}

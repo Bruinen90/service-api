@@ -20,7 +20,6 @@ const Device_1 = __importDefault(require("../models/Device"));
 const RepairsCounter_1 = __importDefault(require("../models/RepairsCounter"));
 exports.newRepair = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { serviceId } = req;
-    console.log('new repair...');
     try {
         const customerToSave = yield new Customer_1.default(req.body.customer);
         yield customerToSave.save();

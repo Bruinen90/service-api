@@ -125,9 +125,23 @@ export const newServiceman = async (req: NewServicemanReq, res: Response) => {
 			name,
 			email,
 			phonenumber,
-			serviceId,
+			service: serviceId,
 		});
 		const savedServiceman = await newServiceman.save();
+		return res.status(201).json({ _id: savedServiceman._id });
+	} catch (err) {
+		console.log(err);
+	}
+};
+
+export const getAllServicemen = async (req: StandardRequest, res: Response) => {
+	const { serviceId } = req;
+	if (!serviceId) {
+		// Throw auth error
+	}
+	try {
+		const allServicemen = await Serviceman.find({ service: serviceId });
+		res.status(200).json({ allServicemen });
 	} catch (err) {
 		console.log(err);
 	}
