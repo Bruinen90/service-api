@@ -1,9 +1,7 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import SettingsField, { FieldCategory } from '../models/SettingsField';
-
-interface StandardRequest extends Request {
-	serviceId: string;
-}
+import { StandardRequest } from '../types/common';
+import Serviceman from '../models/Serviceman';
 
 interface NewSettingsFieldReq extends StandardRequest {
 	body: {
@@ -13,6 +11,14 @@ interface NewSettingsFieldReq extends StandardRequest {
 		category: string;
 		radios?: string[];
 		required?: boolean;
+	};
+}
+
+interface NewServicemanReq extends StandardRequest {
+	body: {
+		name: string;
+		email?: string;
+		phonenumber?: string;
 	};
 }
 
@@ -92,4 +98,37 @@ export const getSettingsFields = async (
 		serviceId: serviceId,
 	});
 	return res.status(200).json({ allSettingsFields });
+};
+
+export const newServiceman = async (req: NewServicemanReq, res: Response) => {
+	const { serviceId } = req;
+	const { name, email, phonenumber } = req.body;
+	if (!serviceId) {
+		// Throw auth error
+	}
+	try {
+		const duplicateServiceman = await Serviceman.findOne({
+			serviceId: serviceId,
+			$or: [
+				{ name: name },
+				{ email: email },
+				{ phonenumber: phonenumber },
+			],
+		});
+		if (duplicateServiceman) {
+			return res.status(409).json({
+				message: 'Serviceman with such data already exist in database',
+				duplicateServicemanData: duplicateServiceman,
+			});
+		}
+		const newServiceman = await new Serviceman({
+			name,
+			email,
+			phonenumber,
+			serviceId,
+		});
+		const savedServiceman = await newServiceman.save();
+	} catch (err) {
+		console.log(err);
+	}
 };

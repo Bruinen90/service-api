@@ -23,7 +23,6 @@ interface INewRepairRequest extends StandardRequest {
 
 export const newRepair = async (req: INewRepairRequest, res: Response) => {
 	const { serviceId } = req;
-	console.log('new repair...');
 	try {
 		const customerToSave = await new Customer(req.body.customer);
 		await customerToSave.save();
