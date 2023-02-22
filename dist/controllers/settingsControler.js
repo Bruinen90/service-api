@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newServiceman = exports.getSettingsFields = exports.deleteSettingsField = exports.newSettingsField = void 0;
+exports.getAllServicemen = exports.newServiceman = exports.getSettingsFields = exports.deleteSettingsField = exports.newSettingsField = void 0;
 const SettingsField_1 = __importDefault(require("../models/SettingsField"));
 const Serviceman_1 = __importDefault(require("../models/Serviceman"));
 exports.newSettingsField = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -105,10 +105,23 @@ exports.newServiceman = (req, res) => __awaiter(void 0, void 0, void 0, function
             name,
             email,
             phonenumber,
-            serviceId,
+            service: serviceId,
         });
         const savedServiceman = yield newServiceman.save();
         return res.status(201).json({ _id: savedServiceman._id });
+    }
+    catch (err) {
+        console.log(err);
+    }
+});
+exports.getAllServicemen = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { serviceId } = req;
+    if (!serviceId) {
+        // Throw auth error
+    }
+    try {
+        const allServicemen = yield Serviceman_1.default.find({ service: serviceId });
+        res.status(200).json({ allServicemen });
     }
     catch (err) {
         console.log(err);

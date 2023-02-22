@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { response, Response } from 'express';
 import SettingsField, { FieldCategory } from '../models/SettingsField';
 import { StandardRequest } from '../types/common';
 import Serviceman from '../models/Serviceman';
@@ -19,6 +19,15 @@ interface NewServicemanReq extends StandardRequest {
 		name: string;
 		email?: string;
 		phonenumber?: string;
+	};
+}
+
+interface UpdateServicemanReq extends StandardRequest {
+	body: {
+		name: string;
+		email?: string;
+		phonenumber?: string;
+		_id: string;
 	};
 }
 
@@ -142,6 +151,26 @@ export const getAllServicemen = async (req: StandardRequest, res: Response) => {
 	try {
 		const allServicemen = await Serviceman.find({ service: serviceId });
 		res.status(200).json({ allServicemen });
+	} catch (err) {
+		console.log(err);
+	}
+};
+
+export const updateServiceman = async (
+	req: UpdateServicemanReq,
+	res: Response
+) => {
+	const { serviceId } = req;
+	try {
+		const updatedDoc = await Serviceman.findByIdAndUpdate(
+			req.body._id,
+			req.body
+		);
+		if (updatedDoc) {
+			response.status(200);
+		} else {
+			response.status(500);
+		}
 	} catch (err) {
 		console.log(err);
 	}

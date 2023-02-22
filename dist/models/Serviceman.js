@@ -24,6 +24,7 @@ const ServicemanSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
     phonenumber: String,
     email: String,
+    service: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Service', required: true },
 });
 exports.default = mongoose_1.default.model('Serviceman', ServicemanSchema);
 //# sourceMappingURL=Serviceman.js.map
