@@ -7,6 +7,7 @@ import {
 	newServiceman,
 	getAllServicemen,
 	updateServiceman,
+	deleteServiceman,
 } from '../controllers/settingsControler';
 
 router.post('/new-field', newSettingsField);
@@ -15,5 +16,6 @@ router.put('/update-serviceman', updateServiceman);
 router.get('/all-fields', getSettingsFields);
 router.get('/get-all-servicemen', getAllServicemen);
 router.delete('/delete-field/:fieldId', deleteSettingsField);
+router.delete('/delete-serviceman/:servicemanId', deleteServiceman);
 
 export default router;

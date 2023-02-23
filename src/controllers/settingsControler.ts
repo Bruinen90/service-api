@@ -150,7 +150,7 @@ export const getAllServicemen = async (req: StandardRequest, res: Response) => {
 	}
 	try {
 		const allServicemen = await Serviceman.find({ service: serviceId });
-		res.status(200).json({ allServicemen });
+		return res.status(200).json({ allServicemen });
 	} catch (err) {
 		console.log(err);
 	}
@@ -161,16 +161,33 @@ export const updateServiceman = async (
 	res: Response
 ) => {
 	const { serviceId } = req;
+	if (!serviceId) {
+		return res.status(401);
+	}
 	try {
 		const updatedDoc = await Serviceman.findByIdAndUpdate(
 			req.body._id,
 			req.body
 		);
 		if (updatedDoc) {
-			response.status(200);
+			return res.status(200);
 		} else {
-			response.status(500);
+			return res.status(500);
 		}
+	} catch (err) {
+		console.log(err);
+	}
+};
+
+export const deleteServiceman = async (req: StandardRequest, res: Response) => {
+	const { serviceId } = req;
+	const { servicemanId } = req.params;
+	try {
+		if (!serviceId) {
+			return res.status(401);
+		}
+		await Serviceman.findByIdAndDelete(servicemanId);
+		return res.status(200).json({ message: 'Serviceman deleted' });
 	} catch (err) {
 		console.log(err);
 	}
