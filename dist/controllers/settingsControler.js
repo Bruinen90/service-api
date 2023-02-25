@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.testEndpoint = exports.updateServiceman = exports.getAllServicemen = exports.newServiceman = exports.getSettingsFields = exports.deleteSettingsField = exports.newSettingsField = void 0;
+exports.deleteServiceman = exports.updateServiceman = exports.getAllServicemen = exports.newServiceman = exports.getSettingsFields = exports.deleteSettingsField = exports.newSettingsField = void 0;
 const SettingsField_1 = __importDefault(require("../models/SettingsField"));
 const Serviceman_1 = __importDefault(require("../models/Serviceman"));
 exports.newSettingsField = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -129,6 +129,9 @@ exports.getAllServicemen = (req, res) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.updateServiceman = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { serviceId } = req;
+    if (!serviceId) {
+        return res.status(401);
+    }
     try {
         const updatedDoc = yield Serviceman_1.default.findByIdAndUpdate(req.body._id, req.body);
         if (updatedDoc) {
@@ -142,22 +145,18 @@ exports.updateServiceman = (req, res) => __awaiter(void 0, void 0, void 0, funct
         console.log(err);
     }
 });
-// export const deleteServiceman = async (req: StandardRequest, res: Response) => {
-// 	const { serviceId } = req;
-// 	const { servicemanId } = req.params;
-// 	try {
-// 		if (!serviceId) {
-// 			return res.status(401);
-// 		}
-// 		await Serviceman.findByIdAndDelete(servicemanId);
-// 		console.log(servicemanId);
-// 		return res.status(200);
-// 	} catch (err) {
-// 		console.log(err);
-// 	}
-// };
-exports.testEndpoint = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('TESt request hit');
-    res.status(200);
+exports.deleteServiceman = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { serviceId } = req;
+    const { servicemanId } = req.params;
+    try {
+        if (!serviceId) {
+            return res.status(401);
+        }
+        yield Serviceman_1.default.findByIdAndDelete(servicemanId);
+        return res.status(200).json({ message: 'Serviceman deleted' });
+    }
+    catch (err) {
+        console.log(err);
+    }
 });
 //# sourceMappingURL=settingsControler.js.map

@@ -55,7 +55,11 @@ exports.getAllRepairs = (req, res) => __awaiter(void 0, void 0, void 0, function
         const { serviceId } = req;
         const allRepairs = yield Repair_1.default.find({ serviceId: serviceId })
             .populate('customer')
-            .populate('device');
+            .populate('device')
+            .populate({
+            path: 'repairData',
+            populate: { path: 'serviceman', model: 'Serviceman' },
+        });
         res.status(200).json(allRepairs);
     }
     catch (err) {

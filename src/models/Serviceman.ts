@@ -8,7 +8,7 @@ export interface IServiceman extends Document {
 }
 
 const ServicemanSchema = new Schema({
-	name: { type: String, required: true },
+	name: { type: String, required: true, unique: true },
 	phonenumber: String,
 	email: String,
 	service: { type: Schema.Types.ObjectId, ref: 'Service', required: true },

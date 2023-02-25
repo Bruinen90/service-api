@@ -9,6 +9,7 @@ import Customer from '../models/Customer';
 import Device from '../models/Device';
 import RepairsCounter from '../models/RepairsCounter';
 import { json } from 'body-parser';
+import Serviceman from '../models/Serviceman';
 
 interface INewRepairRequest extends StandardRequest {
 	body: {
@@ -18,6 +19,14 @@ interface INewRepairRequest extends StandardRequest {
 			addedDate: Date;
 			[paramName: string]: string | number | boolean | Date;
 		};
+	};
+}
+
+interface IGetRepairRequest extends StandardRequest {
+	body: {
+		filterParam: string;
+		filterValue: string | Date | boolean | number;
+		filterEquity: '>=' | '==' | '<=';
 	};
 }
 
@@ -37,11 +46,22 @@ export const newRepair = async (req: INewRepairRequest, res: Response) => {
 			await lastRepairCounter.counter++;
 			lastRepairCounter.save();
 		}
+		const servicemanAssigned = await Serviceman.findOne({
+			name: req.body.problem.serviceman as string,
+		});
+
+		if (!servicemanAssigned) {
+			res.status(500).json({
+				message: `No serviceman found for provided name ${req.body.problem.serviceman}`,
+			});
+		}
+
 		const repairToSave = await new Repair({
 			customer: customerToSave._id,
 			device: deviceToSave._id,
 			repairData: {
 				...req.body.problem,
+				serviceman: servicemanAssigned._id,
 				addedDate: new Date(),
 				number: lastRepairCounter.counter,
 			},
@@ -55,14 +75,6 @@ export const newRepair = async (req: INewRepairRequest, res: Response) => {
 	}
 };
 
-interface IGetRepairRequest extends StandardRequest {
-	body: {
-		filterParam: string;
-		filterValue: string | Date | boolean | number;
-		filterEquity: '>=' | '==' | '<=';
-	};
-}
-
 export const getRepair = async (req: IGetRepairRequest, res: Response) => {};
 
 export const getAllRepairs = async (req: any, res: Response) => {
@@ -70,7 +82,11 @@ export const getAllRepairs = async (req: any, res: Response) => {
 		const { serviceId } = req;
 		const allRepairs = await Repair.find({ serviceId: serviceId })
 			.populate('customer')
-			.populate('device');
+			.populate('device')
+			.populate({
+				path: 'repairData.serviceman',
+				model: 'Serviceman',
+			});
 		res.status(200).json(allRepairs);
 	} catch (err) {
 		console.log(err);

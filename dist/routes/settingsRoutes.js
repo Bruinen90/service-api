@@ -12,7 +12,6 @@ router.put('/update-serviceman', settingsControler_1.updateServiceman);
 router.get('/all-fields', settingsControler_1.getSettingsFields);
 router.get('/get-all-servicemen', settingsControler_1.getAllServicemen);
 router.delete('/delete-field/:fieldId', settingsControler_1.deleteSettingsField);
-// router.delete('/delete-serviceman/:servicemanId', deleteServiceman);
-router.get('/test-endpoint');
+router.delete('/delete-serviceman/:servicemanId', settingsControler_1.deleteServiceman);
 exports.default = router;
 //# sourceMappingURL=settingsRoutes.js.map

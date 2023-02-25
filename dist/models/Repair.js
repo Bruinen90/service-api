@@ -33,6 +33,11 @@ const RepairSchema = new mongoose_1.Schema({
     },
     repairData: {
         addedDate: { type: Date, required: true },
+        serviceman: {
+            type: mongoose_1.Schema.Types.ObjectId,
+            required: true,
+            ref: 'Serviceman',
+        },
     },
     serviceId: {
         type: mongoose_1.Schema.Types.ObjectId,
