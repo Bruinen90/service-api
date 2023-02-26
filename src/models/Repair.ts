@@ -26,6 +26,7 @@ const RepairSchema = new Schema(
 		},
 		repairData: {
 			addedDate: { type: Date, required: true },
+			enddate: { type: Date, required: true },
 			serviceman: {
 				type: Schema.Types.ObjectId,
 				required: true,

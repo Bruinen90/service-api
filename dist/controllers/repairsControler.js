@@ -18,6 +18,7 @@ const Repair_1 = __importDefault(require("../models/Repair"));
 const Customer_1 = __importDefault(require("../models/Customer"));
 const Device_1 = __importDefault(require("../models/Device"));
 const RepairsCounter_1 = __importDefault(require("../models/RepairsCounter"));
+const Serviceman_1 = __importDefault(require("../models/Serviceman"));
 exports.newRepair = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { serviceId } = req;
     try {
@@ -35,10 +36,18 @@ exports.newRepair = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             yield lastRepairCounter.counter++;
             lastRepairCounter.save();
         }
+        const servicemanAssigned = yield Serviceman_1.default.findOne({
+            name: req.body.problem.serviceman,
+        });
+        if (!servicemanAssigned) {
+            res.status(500).json({
+                message: `No serviceman found for provided name ${req.body.problem.serviceman}`,
+            });
+        }
         const repairToSave = yield new Repair_1.default({
             customer: customerToSave._id,
             device: deviceToSave._id,
-            repairData: Object.assign(Object.assign({}, req.body.problem), { addedDate: new Date(), number: lastRepairCounter.counter }),
+            repairData: Object.assign(Object.assign({}, req.body.problem), { serviceman: servicemanAssigned._id, addedDate: new Date(), number: lastRepairCounter.counter }),
             serviceId: serviceId,
         });
         const savedRepair = yield repairToSave.save();
@@ -57,8 +66,8 @@ exports.getAllRepairs = (req, res) => __awaiter(void 0, void 0, void 0, function
             .populate('customer')
             .populate('device')
             .populate({
-            path: 'repairData',
-            populate: { path: 'serviceman', model: 'Serviceman' },
+            path: 'repairData.serviceman',
+            model: 'Serviceman',
         });
         res.status(200).json(allRepairs);
     }

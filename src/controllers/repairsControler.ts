@@ -8,7 +8,6 @@ import Repair from '../models/Repair';
 import Customer from '../models/Customer';
 import Device from '../models/Device';
 import RepairsCounter from '../models/RepairsCounter';
-import { json } from 'body-parser';
 import Serviceman from '../models/Serviceman';
 
 interface INewRepairRequest extends StandardRequest {
