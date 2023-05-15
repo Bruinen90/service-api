@@ -32,10 +32,21 @@ interface IGetRepairRequest extends StandardRequest {
 export const newRepair = async (req: INewRepairRequest, res: Response) => {
 	const { serviceId } = req;
 	try {
-		const customerToSave = await new Customer(req.body.customer);
-		await customerToSave.save();
-		const deviceToSave = await new Device(req.body.device);
-		await deviceToSave.save();
+		let deviceId = req.body.device._id;
+		if (!deviceId) {
+			const deviceToSave = await new Device(req.body.device);
+			await deviceToSave.save();
+			deviceId = deviceToSave._id;
+		}
+		let customerId = req.body.customer._id;
+		if (!customerId) {
+			const customerToSave = await new Customer({
+				devices: deviceId,
+				...req.body.customer,
+			});
+			await customerToSave.save();
+			customerId = customerToSave._id;
+		}
 		const lastRepairCounter = await RepairsCounter.findOne({});
 		// In case it's first repair in DB
 		if (!lastRepairCounter) {
@@ -56,8 +67,8 @@ export const newRepair = async (req: INewRepairRequest, res: Response) => {
 		}
 
 		const repairToSave = await new Repair({
-			customer: customerToSave._id,
-			device: deviceToSave._id,
+			customer: customerId,
+			device: deviceId,
 			repairData: {
 				...req.body.problem,
 				serviceman: servicemanAssigned._id,

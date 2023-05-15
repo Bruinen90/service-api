@@ -22,10 +22,18 @@ const Serviceman_1 = __importDefault(require("../models/Serviceman"));
 exports.newRepair = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { serviceId } = req;
     try {
-        const customerToSave = yield new Customer_1.default(req.body.customer);
-        yield customerToSave.save();
-        const deviceToSave = yield new Device_1.default(req.body.device);
-        yield deviceToSave.save();
+        let deviceId = req.body.device._id;
+        if (!deviceId) {
+            const deviceToSave = yield new Device_1.default(req.body.device);
+            yield deviceToSave.save();
+            deviceId = deviceToSave._id;
+        }
+        let customerId = req.body.customer._id;
+        if (!customerId) {
+            const customerToSave = yield new Customer_1.default(Object.assign({ devices: deviceId }, req.body.customer));
+            yield customerToSave.save();
+            customerId = customerToSave._id;
+        }
         const lastRepairCounter = yield RepairsCounter_1.default.findOne({});
         // In case it's first repair in DB
         if (!lastRepairCounter) {
@@ -45,8 +53,8 @@ exports.newRepair = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             });
         }
         const repairToSave = yield new Repair_1.default({
-            customer: customerToSave._id,
-            device: deviceToSave._id,
+            customer: customerId,
+            device: deviceId,
             repairData: Object.assign(Object.assign({}, req.body.problem), { serviceman: servicemanAssigned._id, addedDate: new Date(), number: lastRepairCounter.counter }),
             serviceId: serviceId,
         });

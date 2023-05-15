@@ -32,3 +32,18 @@ export const newCustomer = async (req: INewCustomerReq, res: Response) => {
 		console.log(err);
 	}
 };
+
+export const findCustomer = async (req: StandardRequest, res: Response) => {
+	if (!req.serviceId) {
+		return res.status(401);
+	}
+	const key = Object.keys(req.query)[0];
+	try {
+		const foundCustomers = await Customer.find({
+			[key]: { $regex: req.query[key], $options: 'i' },
+		}).populate('devices');
+		return res.status(200).json({ customers: foundCustomers });
+	} catch (err) {
+		console.log(err);
+	}
+};

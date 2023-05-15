@@ -22,6 +22,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const CustomerSchema = new mongoose_1.Schema({
     phoneNumber: { type: String, required: true },
+    devices: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'Device' }],
 }, { strict: false });
 exports.default = mongoose_1.default.model('Customer', CustomerSchema);
 //# sourceMappingURL=Customer.js.map

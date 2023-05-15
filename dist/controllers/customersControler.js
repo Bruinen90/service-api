@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newCustomer = void 0;
+exports.findCustomer = exports.newCustomer = void 0;
 const Customer_1 = __importDefault(require("../models/Customer"));
 exports.newCustomer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.serviceId) {
@@ -29,6 +29,21 @@ exports.newCustomer = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const customer = new Customer_1.default(Object.assign(Object.assign({}, req.body), { serviceId: req.serviceId }));
         yield customer.save();
         res.status(200).json({ _id: customer._id });
+    }
+    catch (err) {
+        console.log(err);
+    }
+});
+exports.findCustomer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.serviceId) {
+        return res.status(401);
+    }
+    const key = Object.keys(req.query)[0];
+    try {
+        const foundCustomers = yield Customer_1.default.find({
+            [key]: { $regex: req.query[key], $options: 'i' },
+        });
+        return res.status(200).json({ customers: foundCustomers });
     }
     catch (err) {
         console.log(err);

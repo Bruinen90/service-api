@@ -25,6 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const customersController = __importStar(require("../controllers/customersControler"));
+router.get('/find', customersController.findCustomer);
 router.post('/new-customer', customersController.newCustomer);
 exports.default = router;
 //# sourceMappingURL=customersRoutes.js.map
